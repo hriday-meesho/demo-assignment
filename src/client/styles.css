@@ -1,3 +1,47 @@
 body {
-  background-color: aquamarine;
+  background-color: rgb(255, 255, 255);
+}
+
+.heading h1 {
+  text-align: center;
+}
+
+/* Sort Bar */
+#sort-bar {
+  width: 100%;
+  background-color: #ddd;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sort-bar button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#sort-bar button.active {
+  background-color: #555;
+  color: #fff;
+}
+
+/* product list items */
+#product-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.product-item {
+  border: 1px solid #ddd;
+  width: 50%;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+}
+
+.product-item img {
+  max-width: 20%;
+  height: auto;
+  margin-bottom: 10px;
 }
