@@ -1,67 +1,64 @@
 document.addEventListener("DOMContentLoaded", function () {
-  fetch("https://fakestoreapi.com/products")
+  fetch("/data")
     .then((response) => response.json())
     .then((data) => {
       generateProductList(data);
       document
-        .getElementById("sortByPriceLow")
-        .addEventListener("click", () => sortByPriceLow(data));
+        .getElementById("price-low")
+        .addEventListener("click", () => sortBy(data, "price-low"));
       document
-        .getElementById("sortByPriceHigh")
-        .addEventListener("click", () => sortByPriceHigh(data));
+        .getElementById("price-high")
+        .addEventListener("click", () => sortBy(data, "price-high"));
       document
-        .getElementById("sortByRatingLow")
-        .addEventListener("click", () => sortByRatingLow(data));
+        .getElementById("rating-low")
+        .addEventListener("click", () => sortBy(data, "rating-low"));
       document
-        .getElementById("sortByRatingHigh")
-        .addEventListener("click", () => sortByRatingHigh(data));
+        .getElementById("rating-high")
+        .addEventListener("click", () => sortBy(data, "rating-high"));
     })
     .catch((error) => console.error("Error fetching data:", error));
 });
 
 function generateProductList(products) {
-  //console.log(products);
   const productListContainer = document.getElementById("product-list");
-  productListContainer.innerHTML = "";
+  const productHTML = [];
 
   products.forEach((product) => {
-    const listItem = document.createElement("div");
-    listItem.classList.add("product-item");
-
-    listItem.innerHTML = `
-            <img src="${product.image}" alt="${product.title}">
-            <h2>${product.title}</h2>
-            <p>${product.description}</p>
-            <p>Price: $${product.price}</p>
-            <p>Rating: ${product.rating.rate} (${product.rating.count} reviews)</p>
-        `;
-
-    productListContainer.appendChild(listItem);
+    const productItemHTML = `
+          <div class="product-item">
+              <img src="${product.image}" alt="${product.title}">
+              <h2>${product.title}</h2>
+              <p>${product.description}</p>
+              <p>Price: $${product.price}</p>
+              <p>Rating: ${product.rating.rate} (${product.rating.count} reviews)</p>
+          </div>
+      `;
+    productHTML.push(productItemHTML);
   });
+  productListContainer.innerHTML = productHTML.join("");
 }
 
-function sortByPriceLow(data) {
-  data.sort((a, b) => a.price - b.price);
-  generateProductList(data);
-  updateActiveButton("sortByPriceLow");
-}
+function sortBy(data, criterion) {
+  switch (criterion) {
+    case "price-low":
+      data.sort((a, b) => a.price - b.price);
+      break;
+    case "price-high":
+      data.sort((a, b) => b.price - a.price);
+      break;
+    case "rating-low":
+      data.sort((a, b) => a.rating.rate - b.rating.rate);
+      break;
+    case "rating-high":
+      data.sort((a, b) => b.rating.rate - a.rating.rate);
+      break;
+    default:
+      data.sort((a, b) => b.rating.rate - a.rating.rate);
+      break;
+  }
 
-function sortByPriceHigh(data) {
-  data.sort((a, b) => b.price - a.price);
   generateProductList(data);
-  updateActiveButton("sortByPriceHigh");
-}
-
-function sortByRatingLow(data) {
-  data.sort((a, b) => a.rating.rate - b.rating.rate);
-  generateProductList(data);
-  updateActiveButton("sortByRatingLow");
-}
-
-function sortByRatingHigh(data) {
-  data.sort((a, b) => b.rating.rate - a.rating.rate);
-  generateProductList(data);
-  updateActiveButton("sortByRatingHigh");
+  updateActiveButton(criterion);
 }
 
 function updateActiveButton(activeButtonId) {
